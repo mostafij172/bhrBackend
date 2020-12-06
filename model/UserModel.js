@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const { text } = require("express");
 
 const userSchema = mongoose.Schema({
     role: {
@@ -36,7 +37,7 @@ const userSchema = mongoose.Schema({
         }
     },
     nid: {
-        type: Number,
+        type: String,
         unique: [true, 'this nid already exist'],
         trim: true,
         required: [true, "nid field is required"]
@@ -46,7 +47,7 @@ const userSchema = mongoose.Schema({
         trim: true
     },
     cell_phone_no: {
-        type: Number,
+        type: String,
         trim: true,
         maxLength: [11, 'Invalid phone no, maximum length is 11'],
         unique: [true, "this phone no already exist"]

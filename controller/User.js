@@ -15,12 +15,9 @@ class AllUser {
         const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
       
         res.cookie('jwt', token, {
-          domain: '127.0.0.1:8000',
-          expires: new Date(
-            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600000
-          ),
-          httpOnly: false
-        });
+          expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600000), 
+          httpOnly: true 
+         })
 
         res.status(200).json({
           status: 'successfull',
@@ -32,7 +29,7 @@ class AllUser {
     async login(req, res, next) {
         const { email, password } = req.body;
         if (!email || !password) {
-          return res.status(400).json({
+          return res.status(401).json({
                 status: 'fail',
             })
         }
@@ -40,21 +37,19 @@ class AllUser {
         const user = await UserModel.findOne({ email }).select('+password');
 
         if (!user || !(await user.checkPassword(password, user.password))) {
-            return res.status(400).json({
+            return res.status(401).json({
                 status: 'fail'
             })
         }
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
-
         res.cookie('jwt', token, {
-          domain: '127.0.0.1:8000',
-          expires: new Date(
-            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600000
-          ),
-          httpOnly: false
-        });
-
+          domain: '127.0.0.1:3000',
+          path: '/',
+           expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 3600000), 
+           httpOnly: true 
+          })
+        res.setHeader('Access-Control-Allow-Origin', '*')
         res.status(200).json({
             status: 'success',
             token,
