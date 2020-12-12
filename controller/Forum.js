@@ -23,13 +23,6 @@ class Forum{
             data: post
         });
     }
-    async getAllPost(req, res, next) {
-        const allPosts = await ForumModel.find();
-        res.status(200).json({
-            status: 'success',
-            data: allPosts
-        })
-    }
 
     async deletePost(req, res, next) {
         const post = await ForumModel.findById({_id: req.params.id})

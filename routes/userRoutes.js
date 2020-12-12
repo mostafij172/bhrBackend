@@ -9,10 +9,11 @@ const router = express.Router();
 
 router.post('/sign-up', user.signUp);
 router.post('/login', user.login);
-router.patch('/update-me', user.protect, user.updateMe);
-// router.get('/view-all-user', user.protect, user.authorize('admin'), admin.getAllUsers);
-router.get('/view-all-user', admin.getAllUsers);
-router.delete('/delete-user/:id', admin.deleteAUser);
+router.get('/profile/:id', user.getAUser);
+router.patch('/', user.protect, user.updateMe);
+router.get('/view-all-user', user.protect, user.authorize('admin'), admin.getAllUsers);
+// router.get('/view-all-user', admin.getAllUsers);
+// router.delete('/delete-user/:id', admin.deleteAUser);
 
 
 module.exports = router;

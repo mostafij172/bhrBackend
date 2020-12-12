@@ -42,7 +42,8 @@ class AllUser {
             })
         }
 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
+        const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
+
         res.cookie('jwt', token, {
           domain: '127.0.0.1:3000',
           path: '/',
@@ -57,6 +58,16 @@ class AllUser {
         })
     }
 
+    async getAUser(req, res, next) {
+      const {id} = req.params;
+      console.log(id);
+      const user = await UserModel.findById(id);
+      res.status(200).json({
+        status: "success",
+        data: user
+      })
+    }
+
     async protect (req, res, next) {
         let token;
         if (
@@ -67,7 +78,7 @@ class AllUser {
         }
       
         if (!token) {
-          return res.status(400).json({
+          return res.status(401).json({
               status: 'fail',
               message: 'you are not logged in'
           })
@@ -90,7 +101,7 @@ class AllUser {
       authorize(...role) {
         return function(req, res, next) {
           if (!role.includes(req.user.role)) {
-            res.status(403).json({
+            res.status(401).json({
                 status: 'fail',
                 message: 'access denied'
             })

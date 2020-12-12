@@ -1,4 +1,5 @@
 const UserModel = require('./../model/UserModel');
+const ForumModel = require('./../model/ForumModel');
 const User = require('./User');
 
 class Admin extends User {
@@ -16,12 +17,16 @@ class Admin extends User {
         })
     }
 
-    async deleteAUser(req, res, next) {
-        const {id} = req.params;
-        await UserModel.findByIdAndDelete(id);
-        res.status(404).json({
+    async getAllPost(req, res, next) {
+        const allPosts = await ForumModel.find();
+        res.status(200).json({
             status: 'success',
+            data: allPosts
         })
+    }
+
+    async deletePost(req, res, next) {
+
     }
 }
 
